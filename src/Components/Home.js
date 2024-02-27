@@ -16,22 +16,25 @@ const Home = () => {
     const [isEditMode, setIsEditMode] = useState(false);
   
     useEffect(() => {
-      console.log('User ID:', userId);
-      const fetchHome = async () => {
-        try {
-          const response = await axios.get(`http://localhost:5000/Home/${userId}`);
-          if (response.data) {
-            setHomeData(response.data);
-          } else {
-            setIsEditMode(true);
+        console.log('User ID:', userId);
+        const fetchHome = async () => {
+          try {
+            const response = await axios.get(`http://localhost:5000/Home/${userId}`);
+            if (response.data) {
+              setHomeData(response.data);
+              
+              // Check if "age" data is present before entering edit mode
+              setIsEditMode(!response.data.age);
+            } else {
+              setIsEditMode(true); // Set to true when data is not available
+            }
+          } catch (error) {
+            console.error(error.response.data.message);
           }
-        } catch (error) {
-          console.error(error.response.data.message);
-        }
-      };
-  
-      fetchHome();
-    }, [userId]);
+        };
+      
+        fetchHome();
+      }, [userId]);
   
     const handleInputChange = (e) => {
       const { name, value } = e.target;
