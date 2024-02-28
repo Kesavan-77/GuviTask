@@ -1,7 +1,8 @@
 // src/components/SignUp.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link} from 'react-router-dom';
+import '../Styles/Signup.css';
 
 const SignUp = () => {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ const SignUp = () => {
     name: '',
     email: '',
     password: '',
+    confirmPassword: ''
   });
 
   const handleChange = (e) => {
@@ -18,33 +20,41 @@ const SignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    if(formData.password!==formData.confirmPassword){
+      alert("Password does not match");
+    }
+    else{
     try {
       const response = await axios.post('http://localhost:5000/signup', formData);
-      console.log(response.data.message);
-
-      // Redirect to the home page after successful registration
-      navigate('/'); // You can navigate to the specific user's home if needed
+      alert(response.data.message);
+      navigate('/');
     } catch (error) {
-      console.error(error.response.data.message);
+      alert(error.response.data.message);
     }
+  }
   };
 
   return (
-    <div>
+    <div className='signup'>
+      <div className='container'>
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <label>Name:</label>
-        <input type="text" name="name" onChange={handleChange} />
+        <input type="text" name="name" onChange={handleChange} required/>
 
         <label>Email:</label>
-        <input type="email" name="email" onChange={handleChange} />
+        <input type="email" name="email" onChange={handleChange} required/>
 
         <label>Password:</label>
-        <input type="password" name="password" onChange={handleChange} />
+        <input type="password" name="password" onChange={handleChange} required/>
+
+        <label>Confirm Password:</label>
+        <input type="password" name="confirmPassword" onChange={handleChange} required/>
 
         <button type="submit">Sign Up</button>
       </form>
+      <p>Already have an account? <Link to = '/'>login</Link></p>
+      </div>
     </div>
   );
 };

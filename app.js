@@ -27,13 +27,9 @@ const User = mongoose.model('User', userSchema);
 app.post('/signup', async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    
-    // Basic validation
     if (!name || !email || !password) {
       return res.status(400).json({ message: 'All fields are required.' });
     }
-
-    // Check if the email is already registered
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: 'Email is already registered.' });
@@ -53,7 +49,6 @@ app.post('/', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Basic validation
     if (!email || !password) {
       return res.status(400).json({ message: 'Email and password are required.' });
     }
@@ -88,7 +83,6 @@ app.put('/Home/:userId', async (req, res) => {
   try {
     const { age, gender, dob, mobile } = req.body;
 
-    // Basic validation
     if (!age || !gender || !dob || !mobile) {
       return res.status(400).json({ message: 'All fields are required.' });
     }

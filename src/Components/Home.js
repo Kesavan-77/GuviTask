@@ -1,7 +1,8 @@
 // src/components/Home.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
+import '../Styles/Home.css'
 
 const Home = () => {
     const { userId } = useParams();
@@ -22,11 +23,9 @@ const Home = () => {
             const response = await axios.get(`http://localhost:5000/Home/${userId}`);
             if (response.data) {
               setHomeData(response.data);
-              
-              // Check if "age" data is present before entering edit mode
-              setIsEditMode(!response.data.age);
+              setIsEditMode(!response.data.age && !response.data.gender && !response.data.dob && !response.data.mobile);
             } else {
-              setIsEditMode(true); // Set to true when data is not available
+              setIsEditMode(true);
             }
           } catch (error) {
             console.error(error.response.data.message);
@@ -54,41 +53,45 @@ const Home = () => {
     };
 
   return (
-    <div>
-      <h2>Home</h2>
+    <div className='home'>
+      <div className='container'>
       {isEditMode ? (
         <>
+        <h2>welcome {homeData.name}</h2>
+        <form onSubmit={handleSave}>
           <label>
             Age:
-            <input type="text" name="age" value={homeData.age} onChange={handleInputChange} />
           </label>
-          <br />
+          <input type="text" name="age" value={homeData.age} onChange={handleInputChange} />
           <label>
             Gender:
-            <input type="text" name="gender" value={homeData.gender} onChange={handleInputChange} />
           </label>
-          <br />
+          <input type="text" name="gender" value={homeData.gender} onChange={handleInputChange} />
           <label>
             DOB:
-            <input type="text" name="dob" value={homeData.dob} onChange={handleInputChange} />
           </label>
-          <br />
+          <input type="text" name="dob" value={homeData.dob} onChange={handleInputChange} />
           <label>
             Mobile:
-            <input type="text" name="mobile" value={homeData.mobile} onChange={handleInputChange} />
           </label>
-          <br />
-          <button onClick={handleSave}>Save</button>
+          <input type="text" name="mobile" value={homeData.mobile} onChange={handleInputChange} />
+          <button type="submit">Save</button>
+          </form>
         </>
       ) : (
         <>
+        <div className='details'>
+          <h2>User details</h2>
           <p>Name: {homeData.name}</p>
           <p>Age: {homeData.age}</p>
           <p>Gender: {homeData.gender}</p>
           <p>DOB: {homeData.dob}</p>
           <p>Mobile: {homeData.mobile}</p>
+          </div>
+          <Link to='/'><button>Signout</button></Link>
         </>
       )}
+      </div>
     </div>
   );
 };

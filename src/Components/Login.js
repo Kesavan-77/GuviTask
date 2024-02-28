@@ -1,7 +1,8 @@
 // src/components/Login.js
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
+import '../Styles/Login.css'
 
 const Login = () => {
   const navigate = useNavigate();
@@ -21,29 +22,30 @@ const Login = () => {
       const response = await axios.post('http://localhost:5000/', formData);
       if (response && response.data) {
         console.log(response.data);
-
-        // Redirect to home page with userId
         navigate(`/Home/${response.data.userId}`);
       } else {
-        console.error('Response data is undefined.');
+        alert('Response data is undefined.');
       }
     } catch (error) {
-      console.error(error.response.data.message);
+      alert(error.response.data.message);
     }
   };
 
   return (
-    <div>
+    <div className='LoginPage'>
+      <div className='container'>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <label>Email:</label>
-        <input type="email" name="email" onChange={handleChange} />
+        <input type="email" name="email" onChange={handleChange} required />
 
         <label>Password:</label>
-        <input type="password" name="password" onChange={handleChange} />
+        <input type="password" name="password" onChange={handleChange} required />
 
         <button type="submit">Login</button>
       </form>
+      <p>Dont have an account? <Link to = '/signup'>signup</Link></p>
+      </div>
     </div>
   );
 };
